@@ -2,12 +2,10 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
-#include <map>
-#include <time.h>
 
-#include "Produto.h"
-#include "Cliente.h"
-#include "Venda.h"
+#include "Produto.cpp"
+#include "Cliente.cpp"
+#include "Venda.cpp"
 
 using namespace std;
 
@@ -77,8 +75,10 @@ void venda(vector<Produto> & estoque, vector<Produto> & carrinho) {
                 break;
             }
             else{
+                bool encontrou = false;
                 for(int i = 0; i < estoque.size(); i++) {
                     if (estoque[i].getCodigo() == codigo){
+                        encontrou = true;
                         if(estoque[i].getQuantidade() > 0){
                             cout << "Digite a quantidade" << endl;
                             cin >> quantidade;
@@ -102,6 +102,9 @@ void venda(vector<Produto> & estoque, vector<Produto> & carrinho) {
                         }
                         break;
                     }
+                }
+                if (!encontrou){
+                    cout << "\n*Produto inexistente*\n" << endl;
                 }
             }
         }
@@ -175,21 +178,22 @@ int main(){
 
     while (true){
         vector<Produto> carrinho;
-        Cliente cliente;
+        
         int opcao;
         cout << "\n Ola, deseja comprar? (1 - Sim, 0 - Nao)" << endl;
         cin >> opcao;
         if(opcao == 0){
             break;
         }
-
+        string nome, cpf, dataNascimento;
         cout << "Digite seu nome" << endl;
-        cin >> cliente.nome;
+        cin >> nome;
+        cin.sync();
         cout << "Digite seu cpf" << endl;
-        cin >> cliente.cpf;
+        cin >> cpf;
         cout << "Digite sua data de nascimento" << endl;
-        cin >> cliente.dataNascimento;
-
+        cin >> dataNascimento;
+        Cliente cliente(nome, cpf, dataNascimento);
         venda(estoque, carrinho);
         Venda v(vendas.size()+1,cliente,carrinho);
         vendas.push_back(v);
