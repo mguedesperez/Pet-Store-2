@@ -53,12 +53,46 @@ void mostrar(vector<Produto> lista) {
 	}
 }
 
+void mensagens(vector<Produto> & estoque, vector<Produto> & carrinho, int codigo){
+
+    int quantidade;
+    bool encontrou = false;
+    for(int i = 0; i < estoque.size(); i++) {
+        if (estoque[i].getCodigo() == codigo){
+            encontrou = true;
+            if(estoque[i].getQuantidade() > 0){
+                cout << "Digite a quantidade" << endl;
+                cin >> quantidade;
+                if(quantidade <= estoque[i].getQuantidade()){
+                    Produto novo (estoque[i].getCodigo(), estoque[i].getDescricao(), estoque[i].getValor(), quantidade); 
+                    carrinho.push_back(novo);
+                    estoque[i].setQuantidade(estoque[i].getQuantidade()-quantidade);
+
+                    cout << "\n**" << endl;
+                    cout << "Voce adicionou "<< quantidade << " unidades de " << estoque[i].getDescricao()  << endl;
+                    cout << "**\n" << endl;
+                }
+                else{
+                    cout << "\n*Quantidade indisponivel*\n"  << endl;
+                    break;
+                }
+            }
+            else{
+                cout << "\n*Produto indisponivel*\n"  << endl;
+                break;
+            }
+            break;
+        }
+    }
+    if (!encontrou){
+    cout << "\n*Produto inexistente*\n" << endl;
+    }
+}
 
 //Core do sistema. Vendas dos produtos em estoque.
 void venda(vector<Produto> & estoque, vector<Produto> & carrinho) {
     int codigo;
-    int quantidade;
-
+ 
     while (true) {
         
         cout << "\n#########" << endl;
@@ -75,37 +109,7 @@ void venda(vector<Produto> & estoque, vector<Produto> & carrinho) {
                 break;
             }
             else{
-                bool encontrou = false;
-                for(int i = 0; i < estoque.size(); i++) {
-                    if (estoque[i].getCodigo() == codigo){
-                        encontrou = true;
-                        if(estoque[i].getQuantidade() > 0){
-                            cout << "Digite a quantidade" << endl;
-                            cin >> quantidade;
-                            if(quantidade <= estoque[i].getQuantidade()){
-                                Produto novo (estoque[i].getCodigo(), estoque[i].getDescricao(), estoque[i].getValor(), quantidade); 
-                                carrinho.push_back(novo);
-                                estoque[i].setQuantidade(estoque[i].getQuantidade()-quantidade);
-
-                                cout << "\n**" << endl;
-                                cout << "Voce adicionou "<< quantidade << " unidades de " << estoque[i].getDescricao()  << endl;
-                                cout << "**\n" << endl;
-                            }
-                            else{
-                                cout << "\n*Quantidade indisponivel*\n"  << endl;
-                                break;
-                            }
-                        }
-                        else{
-                            cout << "\n*Produto indisponivel*\n"  << endl;
-                            break;
-                        }
-                        break;
-                    }
-                }
-                if (!encontrou){
-                    cout << "\n*Produto inexistente*\n" << endl;
-                }
+                mensagens( estoque, carrinho, codigo);
             }
         }
         break;
